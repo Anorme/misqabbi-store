@@ -4,7 +4,7 @@
 An ecommerce platform dedicated to showcasing Misqabbi, a women-owned fashion brand specializing in made-to-measure pieces designed exclusively for women.
 
 ## Installation
-1. Clone the repo: `git clone https://github.com/your-username/misaqbi-store.git`
+1. Clone the repo: `git clone https://github.com/anorme/misaqbi-store.git`
 2. Navigate into the directory: `cd misqabbi-store`
 3. Install dependencies: `npm install` (or `yarn install`)
 
