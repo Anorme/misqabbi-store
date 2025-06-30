@@ -15,14 +15,34 @@
     "test": "vitest"
   },
   "lint-staged": {
-    "*.js": ["eslint --fix", "prettier --write"],
-    "*.jsx": ["eslint --fix", "prettier --write"],
-    "*.ts": ["eslint --fix", "prettier --write"],
-    "*.tsx": ["eslint --fix", "prettier --write"],
-    "*.css": ["prettier --write"],
-    "*.md": ["prettier --write"],
-    "*.yml": ["prettier --write"],
-    "*.yaml": ["prettier --write"]
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.jsx": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.tsx": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.css": [
+      "prettier --write"
+    ],
+    "*.md": [
+      "prettier --write"
+    ],
+    "*.yml": [
+      "prettier --write"
+    ],
+    "*.yaml": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.10",
@@ -40,6 +60,7 @@
     "@vitejs/plugin-react": "^4.4.1",
     "eslint": "^9.25.0",
     "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "global-jsdom": "^26.0.0",

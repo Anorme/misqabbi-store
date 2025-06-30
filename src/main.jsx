@@ -7,7 +7,6 @@ import App from './App.jsx';
 import './index.css';
 import './styles/tailwind.css';
 
-
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Router>

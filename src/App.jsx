@@ -7,22 +7,55 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import ProductList from './pages/ProductList';
 
-
 import './App.css';
 
 const App = () => {
-
   return (
     <div>
       <Routes>
-        <Route path='/' element={<MainLayout><Home /></MainLayout>}></Route>
-        <Route path='/shop' element={<MainLayout><ProductList /></MainLayout>}></Route>
-        <Route path='/about-us' element={<MainLayout><About /></MainLayout>}></Route>
-        <Route path='/cart' element={<MainLayout><Cart /></MainLayout>}></Route>
-        <Route path='/checkouts' element={<MainLayout><Checkout /></MainLayout>}></Route>
+        <Route
+          path="/"
+          element={
+            <MainLayout>
+              <Home />
+            </MainLayout>
+          }
+        ></Route>
+        <Route
+          path="/shop"
+          element={
+            <MainLayout>
+              <ProductList />
+            </MainLayout>
+          }
+        ></Route>
+        <Route
+          path="/about-us"
+          element={
+            <MainLayout>
+              <About />
+            </MainLayout>
+          }
+        ></Route>
+        <Route
+          path="/cart"
+          element={
+            <MainLayout>
+              <Cart />
+            </MainLayout>
+          }
+        ></Route>
+        <Route
+          path="/checkouts"
+          element={
+            <MainLayout>
+              <Checkout />
+            </MainLayout>
+          }
+        ></Route>
       </Routes>
     </div>
   );
-}
+};
 
 export default App;
