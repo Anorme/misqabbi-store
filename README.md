@@ -1,23 +1,28 @@
 # Misqabbi Store
 
-## Description
+## 🛍️ Description
 
-An ecommerce platform dedicated to showcasing Misqabbi, a women-owned fashion brand specializing in made-to-measure pieces designed exclusively for women.
+Misqabbi Store is an e-commerce platform that showcases **Misqabbi**, a women-owned fashion brand specializing in made-to-measure pieces designed exclusively for women.
 
-## Installation
+## ⚙️ Installation
 
-1. Clone the repo: `git clone https://github.com/anorme/misaqbi-store.git`
-2. Navigate into the directory: `cd misqabbi-store`
-3. Install dependencies: `npm install` (or `yarn install`)
+1. Clone the repository:  
+   `git clone https://github.com/anorme/misaqbi-store.git`
+2. Navigate into the project directory:  
+   `cd misqabbi-store`
+3. Install dependencies:  
+   `npm install` or `yarn install`
 
-## Usage
+## 🚀 Usage
 
-To run the application, use: `npm start` (or `yarn start`)
+To start the development server:  
+`npm start` or `yarn start`
 
-## Contributing
+## 🤝 Contributing
 
-We welcome contributions! Please fork the repository and submit pull requests. Follow coding standards and ensure tests are included.
+We love contributions! To get started, please read our  
+[Contributing Guide](CONTRIBUTING.md) for coding standards, commit conventions, and submission steps.
 
-## License
+## 📄 License
 
-This project does not have a license yet. Check back later for updates.
+This project does not currently have a license. Check back later for updates.
