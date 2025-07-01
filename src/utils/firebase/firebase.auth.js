@@ -4,7 +4,7 @@ import {
   signOut,
   onAuthStateChanged,
 } from 'firebase/auth';
-import { auth } from '../services/firebase.config';
+import { auth } from '../../services/firebase.config';
 import { createUserDocument } from './firebase.user';
 
 export async function registerUserWithEmail(email, password, additionalData) {

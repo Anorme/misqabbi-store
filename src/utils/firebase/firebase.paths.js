@@ -1,5 +1,5 @@
 import { doc, collection } from 'firebase/firestore';
-import { db } from '../services/firebase.config';
+import { db } from '../../services/firebase.config';
 
 export function getUserDocRef(uid) {
   return doc(db, 'users', uid);
