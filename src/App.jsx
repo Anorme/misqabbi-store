@@ -6,6 +6,7 @@ import About from './pages/About';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import ProductList from './pages/ProductList';
+import Register from './pages/Register';
 
 import './App.css';
 
@@ -53,6 +54,8 @@ const App = () => {
             </MainLayout>
           }
         ></Route>
+        {/* Temporarily routed the register component here for easier navigation during development */}
+        <Route path="/register" element={<Register />} />
       </Routes>
     </div>
   );
