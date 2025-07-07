@@ -4,6 +4,7 @@ import { FcGoogle } from 'react-icons/fc';
 import signupImg from '../assets/signup.png';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../services/firebase.config';
+import { Link } from 'react-router';
 
 const Register = () => {
   const [fullName, setFullName] = useState('');
@@ -139,9 +140,9 @@ const Register = () => {
 
           <p className="text-center mt-4">
             Have an account?{' '}
-            <a href="/login" className="text-purple-700 font-medium">
+            <Link to="/login" className="text-purple-700 font-medium">
               Log in
-            </a>
+            </Link>
           </p>
         </div>
       </div>
