@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router';
+import { Routes, Route } from 'react-router-dom';
 
 import MainLayout from './layouts/MainLayout';
 import Home from './pages/Home';
@@ -54,7 +54,7 @@ const App = () => {
             </MainLayout>
           }
         ></Route>
-        {/* Temporarily routed the register component here for easier navigation during development */}
+
         <Route path="/register" element={<Register />} />
       </Routes>
     </div>

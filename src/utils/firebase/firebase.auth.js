@@ -8,8 +8,9 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  signInWithPopup,
 } from 'firebase/auth';
-import { auth } from '../../services/firebase.config';
+import { auth, googleProvider } from '../../services/firebase.config';
 import { createUserDocument } from './firebase.user';
 
 /**
