@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { MdPerson, MdEmail, MdLock, MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { FcGoogle } from 'react-icons/fc';
 import signupImg from '../assets/signup.png';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../services/firebase.config';
-import { Link } from 'react-router';
+import AuthContext from '../context/AuthContext'; // ✅ Default import
 
 const Register = () => {
+  const { register, signInWithGoogle } = useContext(AuthContext); // ✅ Access register and Google sign-in
+
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -34,11 +34,25 @@ const Register = () => {
 
     setLoading(true);
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      await register(email, password); // ✅ Call context method
       setSuccess('Account created successfully!');
       setFullName('');
       setEmail('');
       setPassword('');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError('');
+    setSuccess('');
+    setLoading(true);
+    try {
+      await signInWithGoogle();
+      setSuccess('Signed in with Google successfully!');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -133,16 +147,20 @@ const Register = () => {
             <MdEmail size={22} />
             Continue with email
           </button>
-          <button className="w-[60%] mx-auto py-3 rounded-md flex justify-center items-center gap-2">
+          <button
+            className="w-[60%] mx-auto py-3 rounded-md flex justify-center items-center gap-2"
+            type="button"
+            onClick={handleGoogleSignIn}
+          >
             <FcGoogle size={22} />
             Continue with Google
           </button>
 
           <p className="text-center mt-4">
             Have an account?{' '}
-            <Link to="/login" className="text-purple-700 font-medium">
+            <a href="/login" className="text-purple-700 font-medium">
               Log in
-            </Link>
+            </a>
           </p>
         </div>
       </div>
