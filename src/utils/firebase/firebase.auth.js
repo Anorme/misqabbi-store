@@ -8,9 +8,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  signInWithPopup,
 } from 'firebase/auth';
-import { auth, googleProvider } from '../../services/firebase.config';
+import { auth } from '../../services/firebase.config';
 import { createUserDocument } from './firebase.user';
 
 /**
@@ -51,12 +50,6 @@ export async function logoutUser() {
   await signOut(auth);
 }
 
-/**
- * Subscribes to authentication state changes.
- *
- * @param {function} callback  - Function to call with the user object or null
- * @returns {function} - Unsubscribe function
- */
 export async function onAuthStateChangedListener(callback) {
   return onAuthStateChanged(auth, callback);
 }

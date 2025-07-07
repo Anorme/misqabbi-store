@@ -1,93 +1,34 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../services/firebase.config';
 import {
-  registerUserWithEmail,
-  loginUserWithEmail,
-  logoutUser,
-  onAuthStateChangedListener,
-  signInWithGoogle as signInWithGoogleUtil,
+  createUserWithEmailAndPasswordHelper,
+  signInWithGooglePopup,
 } from '../utils/firebase/firebase.auth';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChangedListener(currentUser => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-    return unsubscribe;
+    const unsubscribe = onAuthStateChanged(auth, setUser);
+    return () => unsubscribe();
   }, []);
 
-  const register = async (email, password, additionalData) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const newUser = await registerUserWithEmail(email, password, additionalData);
-      setUser(newUser);
-      return newUser;
-    } catch (err) {
-      setError(err.message);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const login = async (email, password) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const loggedInUser = await loginUserWithEmail(email, password);
-      setUser(loggedInUser);
-      return loggedInUser;
-    } catch (err) {
-      setError(err.message);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const logout = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      await logoutUser();
-      setUser(null);
-    } catch (err) {
-      setError(err.message);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
+  const register = async (email, password) => {
+    return createUserWithEmailAndPasswordHelper(email, password);
   };
 
   const signInWithGoogle = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const user = await signInWithGoogleUtil();
-      setUser(user);
-      return user;
-    } catch (err) {
-      setError(err.message);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
+    return signInWithGooglePopup();
   };
 
   return (
-    <AuthContext.Provider
-      value={{ user, loading, error, register, login, logout, signInWithGoogle }}
-    >
+    <AuthContext.Provider value={{ user, register, signInWithGoogle }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export default AuthContext;
