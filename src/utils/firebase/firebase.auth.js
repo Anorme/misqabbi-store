@@ -8,6 +8,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  signInWithPopup,
+  GoogleAuthProvider,
 } from 'firebase/auth';
 import { auth } from '../../services/firebase.config';
 import { createUserDocument } from './firebase.user';
@@ -52,4 +54,13 @@ export async function logoutUser() {
 
 export async function onAuthStateChangedListener(callback) {
   return onAuthStateChanged(auth, callback);
+}
+
+export async function createUserWithEmailAndPasswordHelper(email, password) {
+  return createUserWithEmailAndPassword(auth, email, password);
+}
+
+const googleProvider = new GoogleAuthProvider();
+export async function signInWithGooglePopup() {
+  return signInWithPopup(auth, googleProvider);
 }
