@@ -1,5 +1,6 @@
 import UserAuthForm from '../components/UserAuthForm';
 import signupImg from '../assets/signup.png';
+import { Link } from 'react-router';
 
 const Register = () => {
   return (
@@ -23,9 +24,9 @@ const Register = () => {
           <UserAuthForm />
           <p className="text-center mt-4">
             Have an account?{' '}
-            <a href="/login" className="text-purple-700 font-medium">
+            <Link to="/login" className="text-purple-700 font-medium">
               Log in
-            </a>
+            </Link>
           </p>
         </div>
       </div>
