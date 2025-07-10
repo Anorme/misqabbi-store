@@ -56,6 +56,6 @@ export async function logoutUser() {
  * @param {function} callback  - Function to call with the user object or null
  * @returns {function} - Unsubscribe function
  */
-export async function onAuthStateChangedListener(callback) {
+export function onAuthStateChangedListener(callback) {
   return onAuthStateChanged(auth, callback);
 }
