@@ -7,9 +7,12 @@ import { isValidEmail, isStrongPassword } from '../utils/validation';
 const UserAuthForm = () => {
   const { register, signInWithGoogle } = useContext(AuthContext);
 
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    password: '',
+  });
+  const { fullName, email, password } = formData;
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -27,6 +30,11 @@ const UserAuthForm = () => {
     }
   }
 
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
   const handleRegister = async e => {
     e.preventDefault();
     setError('');
@@ -39,11 +47,9 @@ const UserAuthForm = () => {
 
     setLoading(true);
     try {
-      await register(email, password);
+      await register(email, password, fullName);
       setSuccess('Account created successfully!');
-      setFullName('');
-      setEmail('');
-      setPassword('');
+      setFormData({ fullName: '', email: '', password: '' });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -70,9 +76,10 @@ const UserAuthForm = () => {
       <div className="relative">
         <input
           type="text"
+          name="fullName"
           placeholder="Enter your name"
           value={fullName}
-          onChange={e => setFullName(e.target.value)}
+          onChange={handleChange}
           className="w-full p-3 pr-10 border border-gray-300"
           style={{ borderRadius: '15px' }}
         />
@@ -83,9 +90,10 @@ const UserAuthForm = () => {
       <div className="relative">
         <input
           type="email"
+          name="email"
           placeholder="Enter your email address"
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={handleChange}
           className="w-full p-3 pr-10 border border-gray-300"
           style={{ borderRadius: '15px' }}
         />
@@ -96,9 +104,10 @@ const UserAuthForm = () => {
       <div className="relative">
         <input
           type={showPassword ? 'text' : 'password'}
+          name="password"
           placeholder="Enter a password"
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={handleChange}
           className="w-full p-3 pr-10 border border-gray-300"
           style={{ borderRadius: '15px' }}
         />

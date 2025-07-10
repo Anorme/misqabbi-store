@@ -1,9 +1,8 @@
 import { createContext, useState, useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../services/firebase.config';
 import {
-  createUserWithEmailAndPasswordHelper,
+  registerUserWithEmail,
   signInWithGooglePopup,
+  onAuthStateChangedListener,
 } from '../utils/firebase/firebase.auth';
 
 const AuthContext = createContext(); // ✅ Default export
@@ -12,12 +11,12 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, setUser);
+    const unsubscribe = onAuthStateChangedListener(setUser);
     return () => unsubscribe();
   }, []);
 
-  const register = async (email, password) => {
-    return createUserWithEmailAndPasswordHelper(email, password);
+  const register = async (email, password, fullName) => {
+    return registerUserWithEmail(email, password, { fullName });
   };
 
   const signInWithGoogle = async () => {
