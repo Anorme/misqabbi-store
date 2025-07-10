@@ -3,6 +3,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  signInWithPopup,
+  GoogleAuthProvider,
 } from 'firebase/auth';
 import { auth } from '../../services/firebase.config';
 import { createUserDocument } from './firebase.user';
@@ -25,4 +27,12 @@ export async function logoutUser() {
 
 export async function onAuthStateChangedListener(callback) {
   return onAuthStateChanged(auth, callback);
+}
+
+export async function signInWithGooglePopup() {
+  const provider = new GoogleAuthProvider();
+  const result = await signInWithPopup(auth, provider);
+  const user = result.user;
+  await createUserDocument(user);
+  return user;
 }
