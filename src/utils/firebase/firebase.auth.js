@@ -8,6 +8,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  signInWithPopup,
+  GoogleAuthProvider,
 } from 'firebase/auth';
 import { auth } from '../../services/firebase.config';
 import { createUserDocument } from './firebase.user';
@@ -19,7 +21,7 @@ import { createUserDocument } from './firebase.user';
  * @param {string} email - User's email address
  * @param {string} password - User's password
  * @param {object} additionalData - Additional user data (e.g. fullName)
- * @returns {Promise<User>} - The Firebase user object
+ * @returns {Promise<object>} - The Firebase user object
  */
 
 export async function registerUserWithEmail(email, password, additionalData) {
@@ -34,7 +36,7 @@ export async function registerUserWithEmail(email, password, additionalData) {
  *
  * @param {string} email - User's email address
  * @param {string} password - User's password
- * @returns {Promise<User>} - The Firebase user object
+ * @returns {Promise<object>} - The Firebase user object
  */
 export async function loginUserWithEmail(email, password) {
   const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -58,4 +60,18 @@ export async function logoutUser() {
  */
 export function onAuthStateChangedListener(callback) {
   return onAuthStateChanged(auth, callback);
+}
+
+/**
+ * Signs in a user using Google authentication popup.
+ * Also creates a corresponding user document in Firestore if the user doesn't exist.
+ *
+ * @returns {Promise<object>} - The Firebase user object
+ */
+export async function signInWithGooglePopup() {
+  const provider = new GoogleAuthProvider();
+  const result = await signInWithPopup(auth, provider);
+  const user = result.user;
+  await createUserDocument(user);
+  return user;
 }
