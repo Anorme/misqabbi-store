@@ -52,13 +52,7 @@ export async function logoutUser() {
   await signOut(auth);
 }
 
-/**
- * Subscribes to authentication state changes.
- *
- * @param {function} callback  - Function to call with the user object or null
- * @returns {function} - Unsubscribe function
- */
-export function onAuthStateChangedListener(callback) {
+export async function onAuthStateChangedListener(callback) {
   return onAuthStateChanged(auth, callback);
 }
 
