@@ -3,9 +3,9 @@ import {
   registerUserWithEmail,
   signInWithGooglePopup,
   onAuthStateChangedListener,
-} from '../utils/firebase/firebase.auth';
+} from '../utils/firebase';
 
-const AuthContext = createContext(); // ✅ Default export
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

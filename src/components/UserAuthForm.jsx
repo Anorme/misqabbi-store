@@ -18,7 +18,6 @@ const UserAuthForm = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Password strength feedback
   let passwordStrength = '';
   if (password.length > 0) {
     if (isStrongPassword(password)) {
