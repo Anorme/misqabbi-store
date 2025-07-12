@@ -44,20 +44,6 @@ export async function loginUserWithEmail(email, password) {
 }
 
 /**
- * Signs in a user using Google authentication popup.
- * Also creates a corresponding user document in Firestore if the user doesn't exist.
- *
- * @returns {Promise<User>} - The Firebase user object
- */
-export async function signInWithGooglePopup() {
-  const provider = new GoogleAuthProvider();
-  const result = await signInWithPopup(auth, provider);
-  const user = result.user;
-  await createUserDocument(user);
-  return user;
-}
-
-/**
  * Logs out the currently authenticated user.
  *
  * @returns {Promise<void>}
@@ -74,4 +60,18 @@ export async function logoutUser() {
  */
 export function onAuthStateChangedListener(callback) {
   return onAuthStateChanged(auth, callback);
+}
+
+/**
+ * Signs in a user using Google authentication popup.
+ * Also creates a corresponding user document in Firestore if the user doesn't exist.
+ *
+ * @returns {Promise<object>} - The Firebase user object
+ */
+export async function signInWithGooglePopup() {
+  const provider = new GoogleAuthProvider();
+  const result = await signInWithPopup(auth, provider);
+  const user = result.user;
+  await createUserDocument(user);
+  return user;
 }
