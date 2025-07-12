@@ -7,6 +7,7 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import ProductList from './pages/ProductList';
 import Register from './pages/Register';
+import Login from './pages/Login';
 
 import './App.css';
 
@@ -54,8 +55,9 @@ const App = () => {
             </MainLayout>
           }
         ></Route>
-        {/* Temporarily routed the register component here for easier navigation during development */}
+
         <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </div>
   );

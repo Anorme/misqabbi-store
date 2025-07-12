@@ -52,7 +52,7 @@ export async function logoutUser() {
   await signOut(auth);
 }
 
-export async function onAuthStateChangedListener(callback) {
+export function onAuthStateChangedListener(callback) {
   return onAuthStateChanged(auth, callback);
 }
 
