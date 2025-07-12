@@ -25,7 +25,17 @@ export async function logoutUser() {
   await signOut(auth);
 }
 
-export async function onAuthStateChangedListener(callback) {
+ feature/registration-form
+export function onAuthStateChangedListener(callback) {
+
+/**
+ * Subscribes to authentication state changes.
+ *
+ * @param {function} callback  - Function to call with the user object or null
+ * @returns {function} - Unsubscribe function
+ */
+export function onAuthStateChangedListener(callback) {
+ main
   return onAuthStateChanged(auth, callback);
 }
 
