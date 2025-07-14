@@ -10,6 +10,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 
 import './App.css';
+import { FinishSignUp } from './pages/FinishSignUp';
 
 const App = () => {
   return (
@@ -57,6 +58,7 @@ const App = () => {
         ></Route>
 
         <Route path="/register" element={<Register />} />
+        <Route path="/finishSignUp" element={<FinishSignUp />} />
         <Route path="/login" element={<Login />} />
       </Routes>
     </div>
