@@ -59,7 +59,7 @@ export async function loginUserWithEmail(email, password) {
  */
 export async function startSignInWithEmailLink(email) {
   const actionCodeSettings = {
-    url: 'http://localhost:5173/finishSignUp',
+    url: 'http://localhost:3000/finishSignUp',
     handleCodeInApp: true,
   };
 
