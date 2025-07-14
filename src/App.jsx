@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import FinishSignUp from './pages/FinishSignUp';
 
 import './App.css';
+import { FinishSignUp } from './pages/FinishSignUp';
 
 const App = () => {
   return (
