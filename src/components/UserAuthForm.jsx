@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { MdPerson, MdEmail, MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { FcGoogle } from 'react-icons/fc';
-import AuthContext from '../context/AuthContext';
+import AuthContext from '../contexts/AuthContext';
 import { isValidEmail, isStrongPassword } from '../utils/validation';
 
 const UserAuthForm = () => {
