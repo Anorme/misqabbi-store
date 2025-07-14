@@ -3,6 +3,7 @@ import { MdPerson, MdEmail, MdVisibility, MdVisibilityOff } from 'react-icons/md
 import { FcGoogle } from 'react-icons/fc';
 import AuthContext from '../contexts/AuthContext';
 import { isValidEmail, isStrongPassword } from '../utils/validation';
+import { EmailSignInModal } from './UI/EmailSignInModal';
 
 const UserAuthForm = () => {
   const { register, signInWithGoogle } = useContext(AuthContext);
@@ -17,6 +18,7 @@ const UserAuthForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showEmailModal, setShowEmailModal] = useState(false);
 
   let passwordStrength = '';
   if (password.length > 0) {
@@ -143,8 +145,9 @@ const UserAuthForm = () => {
       </div>
       {/* Continue with email for future implementation */}
       <button
-        className="w-[60%] mx-auto py-3 rounded-md mb-2 flex justify-center items-center gap-2"
+        className="w-[60%] mx-auto py-3 rounded-md mb-2 flex justify-center items-center gap-2 cursor-pointer"
         type="button"
+        onClick={() => setShowEmailModal(true)}
       >
         <MdEmail size={22} />
         Continue with email
@@ -157,6 +160,7 @@ const UserAuthForm = () => {
         <FcGoogle size={22} />
         Continue with Google
       </button>
+      {showEmailModal && <EmailSignInModal onClose={() => setShowEmailModal(false)} />}
     </form>
   );
 };
