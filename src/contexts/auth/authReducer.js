@@ -1,5 +1,7 @@
 import { AUTH_ACTION_TYPES } from './authActionTypes';
 
+import { isValidUser } from './utils';
+
 export const initialAuthState = {
   currentUser: null,
   isAuthenticated: false,
@@ -15,7 +17,7 @@ export const authReducer = (state, action) => {
       return {
         ...state,
         currentUser: payload,
-        isAuthenticated: !!payload,
+        isAuthenticated: isValidUser(payload),
         authError: null,
       };
 
