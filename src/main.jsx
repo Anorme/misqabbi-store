@@ -6,7 +6,7 @@ import { BrowserRouter as Router } from 'react-router';
 import App from './App.jsx';
 import './index.css';
 import './styles/tailwind.css';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider } from './contexts/auth/AuthProvider.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
