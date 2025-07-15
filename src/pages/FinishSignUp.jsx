@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { completeSignInWithEmailLink } from '../utils/firebase';
 import { createUserDocument } from '../utils/firebase';
+import FullScreenLoader from '../components/UI/FullScreenLoader';
 
 export const FinishSignUp = () => {
   const navigate = useNavigate();
@@ -22,9 +23,5 @@ export const FinishSignUp = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <div className="h-screen flex items-center justify-center bg-msq-purple font-lato">
-      <p className="text-white text-lg">Completing your sign-in...</p>
-    </div>
-  );
+  return <FullScreenLoader message="Completing your sign-in..." />;
 };
