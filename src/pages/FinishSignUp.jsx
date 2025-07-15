@@ -4,7 +4,7 @@ import { completeSignInWithEmailLink } from '../utils/firebase';
 import { createUserDocument } from '../utils/firebase';
 import FullScreenLoader from '../components/UI/FullScreenLoader';
 
-export const FinishSignUp = () => {
+const FinishSignUp = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,3 +25,5 @@ export const FinishSignUp = () => {
 
   return <FullScreenLoader message="Completing your sign-in..." />;
 };
+
+export default FinishSignUp;

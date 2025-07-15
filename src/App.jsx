@@ -8,9 +8,9 @@ import Checkout from './pages/Checkout';
 import ProductList from './pages/ProductList';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import FinishSignUp from './pages/FinishSignUp';
 
 import './App.css';
-import { FinishSignUp } from './pages/FinishSignUp';
 
 const App = () => {
   return (
