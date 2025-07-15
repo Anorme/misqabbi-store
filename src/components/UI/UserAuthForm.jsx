@@ -1,9 +1,9 @@
 import { useState, useContext } from 'react';
 import { MdPerson, MdEmail, MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { FcGoogle } from 'react-icons/fc';
-import AuthContext from '../contexts/AuthContext';
-import { isValidEmail, isStrongPassword } from '../utils/validation';
-import { EmailSignInModal } from './UI/EmailSignInModal';
+import AuthContext from '../../contexts/AuthContext';
+import { isValidEmail, isStrongPassword } from '../../utils/validation';
+import { EmailSignInModal } from './EmailSignInModal';
 
 const UserAuthForm = () => {
   const { register, signInWithGoogle } = useContext(AuthContext);
