@@ -1,24 +1,30 @@
-import { useState, useContext } from 'react';
-import { MdPerson, MdEmail, MdVisibility, MdVisibilityOff } from 'react-icons/md';
+import { useState } from 'react';
+
 import { FcGoogle } from 'react-icons/fc';
-import AuthContext from '../../contexts/AuthContext';
+import { MdPerson, MdEmail, MdVisibility, MdVisibilityOff } from 'react-icons/md';
+
 import { isValidEmail, isStrongPassword } from '../../utils/validation';
+import { registerUserWithEmail, signInWithGooglePopup } from '../../utils/firebase';
+
+import { useAuthState, useAuthDispatch } from '../../contexts/auth/useAuth';
+import { setAuthLoading, setCurrentUser, setAuthError } from '../../contexts/auth/authActions';
+
 import { EmailSignInModal } from './EmailSignInModal';
 
 const UserAuthForm = () => {
-  const { register, signInWithGoogle } = useContext(AuthContext);
-
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     password: '',
   });
-  const { fullName, email, password } = formData;
+
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [showEmailModal, setShowEmailModal] = useState(false);
+
+  const { fullName, email, password } = formData;
+
+  const { isAuthLoading, authError, currentUser } = useAuthState();
+  const dispatch = useAuthDispatch();
 
   let passwordStrength = '';
   if (password.length > 0) {
@@ -38,37 +44,37 @@ const UserAuthForm = () => {
 
   const handleRegister = async e => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
+    dispatch(setAuthError(null));
+    dispatch(setAuthLoading(true));
 
     if (!isValidEmail(email) || !isStrongPassword(password)) {
-      setError('Please use a valid email and a strong password.');
+      dispatch(setAuthError('Please use a valid email and a strong password.'));
+      dispatch(setAuthLoading(false));
       return;
     }
 
-    setLoading(true);
     try {
-      await register(email, password, fullName);
-      setSuccess('Account created successfully!');
+      const userCred = await registerUserWithEmail(email, password, fullName);
+      dispatch(setCurrentUser(userCred.user));
       setFormData({ fullName: '', email: '', password: '' });
     } catch (err) {
-      setError(err.message);
+      dispatch(setAuthError(err.message));
     } finally {
-      setLoading(false);
+      dispatch(setAuthLoading(false));
     }
   };
 
   const handleGoogleSignIn = async () => {
-    setError('');
-    setSuccess('');
-    setLoading(true);
+    dispatch(setAuthError(null));
+    dispatch(setAuthLoading(true));
+
     try {
-      await signInWithGoogle();
-      setSuccess('Signed in with Google successfully!');
+      const userCred = await signInWithGooglePopup();
+      dispatch(setCurrentUser(userCred.user));
     } catch (err) {
-      setError(err.message);
+      dispatch(setAuthError(err.message));
     } finally {
-      setLoading(false);
+      dispatch(setAuthLoading(false));
     }
   };
 
@@ -132,12 +138,12 @@ const UserAuthForm = () => {
         type="submit"
         className="w-[60%] mx-auto bg-purple-700 text-white py-3 font-semibold"
         style={{ borderRadius: '15px' }}
-        disabled={loading}
+        disabled={isAuthLoading}
       >
-        {loading ? 'Registering...' : 'Create Account'}
+        {isAuthLoading ? 'Registering...' : 'Create Account'}
       </button>
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-      {success && <p className="text-green-500 text-sm">{success}</p>}
+      {authError && <p className="text-red-500 text-sm">{authError}</p>}
+      {currentUser && <p className="text-green-500 text-sm">Welcome {currentUser.displayName}</p>}
       <div className="flex items-center my-4 w-[60%] mx-auto">
         <hr className="flex-grow border-t-2 border-gray-400" />
         <span className="mx-4 text-gray-700 font-bold">or</span>
@@ -153,7 +159,7 @@ const UserAuthForm = () => {
         Continue with email
       </button>
       <button
-        className="w-[60%] mx-auto py-3 rounded-md flex justify-center items-center gap-2"
+        className="w-[60%] mx-auto py-3 rounded-md flex justify-center items-center gap-2 cursor-pointer"
         type="button"
         onClick={handleGoogleSignIn}
       >
