@@ -4,16 +4,20 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router';
 
 import App from './App.jsx';
+import { AuthProvider } from './contexts/auth/AuthProvider.jsx';
+import { FormProvider } from './contexts/form/FormProvider.jsx';
+
 import './index.css';
 import './styles/tailwind.css';
-import { AuthProvider } from './contexts/auth/AuthProvider.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
-      <Router>
-        <App />
-      </Router>
+      <FormProvider>
+        <Router>
+          <App />
+        </Router>
+      </FormProvider>
     </AuthProvider>
   </StrictMode>
 );
