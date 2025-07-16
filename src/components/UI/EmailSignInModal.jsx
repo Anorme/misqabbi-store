@@ -1,16 +1,28 @@
 import { useState } from 'react';
 import { startSignInWithEmailLink } from '../../utils/firebase';
+import { isValidEmail } from '../../utils/validation';
 
 export const EmailSignInModal = ({ onClose }) => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
+  const [feedback, setFeedback] = useState('');
 
   const handleSendLink = async () => {
+    if (!isValidEmail(email)) {
+      setFeedback('Please enter a valid email address.');
+      return;
+    }
     setLoading(true);
-    await startSignInWithEmailLink(email);
-    setLoading(false);
-    alert('Check your inbox for the sign-in link.');
-    onClose();
+    try {
+      await startSignInWithEmailLink(email);
+      setFeedback('Check your inbox for the sign-in link.');
+      setTimeout(onClose, 3000);
+    } catch (error) {
+      console.warn('Error sending link', error);
+      setFeedback('Failed to send link. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -36,6 +48,7 @@ export const EmailSignInModal = ({ onClose }) => {
         >
           {loading ? 'Sending…' : 'Send Link'}
         </button>
+        {feedback && <p className="text-sm text-center mb-4 text-red-500">{feedback}</p>}
       </div>
     </div>
   );
