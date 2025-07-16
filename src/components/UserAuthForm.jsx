@@ -18,6 +18,7 @@ const UserAuthForm = ({ mode = 'register', onSubmit, onGoogleSignIn }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
   let passwordStrength = '';
   if (mode === 'register' && password.length > 0) {
@@ -62,7 +63,7 @@ const UserAuthForm = ({ mode = 'register', onSubmit, onGoogleSignIn }) => {
     setLoading(true);
     try {
       if (onSubmit) {
-        await onSubmit(username, password);
+        await onSubmit(username, password, rememberMe);
       } else {
         // fallback: just simulate login
         setSuccess('Logged in!');
@@ -97,55 +98,71 @@ const UserAuthForm = ({ mode = 'register', onSubmit, onGoogleSignIn }) => {
     <form onSubmit={mode === 'register' ? handleRegister : handleLogin} className="space-y-4">
       {mode === 'register' && (
         <div className="relative">
+          <label htmlFor="fullName" className="block mb-1 font-medium text-left">
+            Full Name
+          </label>
           <input
             type="text"
             name="fullName"
+            id="fullName"
             placeholder="Enter your name"
             value={fullName}
             onChange={handleChange}
             className="w-full p-3 pr-10 border border-gray-300 font-medium placeholder:font-medium"
             style={{ borderRadius: '15px' }}
           />
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+          <span className="absolute right-3 inset-y-0 flex items-center h-full text-gray-400">
             <MdPerson size={20} />
           </span>
         </div>
       )}
       {mode === 'register' ? (
         <div className="relative">
+          <label htmlFor="email" className="block mb-1 font-medium text-left">
+            Email
+          </label>
           <input
             type="email"
             name="email"
+            id="email"
             placeholder="Enter your email address"
             value={email}
             onChange={handleChange}
             className="w-full p-3 pr-10 border border-gray-300 font-medium placeholder:font-medium"
             style={{ borderRadius: '15px' }}
           />
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+          <span className="absolute right-3 inset-y-0 flex items-center h-full text-gray-400">
             <MdEmail size={20} />
           </span>
         </div>
       ) : (
         <div className="relative">
+          <label htmlFor="username" className="block mb-1 font-medium text-left">
+            Username
+          </label>
           <input
             type="text"
             name="username"
+            id="username"
             placeholder="enter your username"
             value={username}
             onChange={handleChange}
             className="w-full p-3 pr-10 border border-gray-300 font-medium placeholder:font-medium"
             style={{ borderRadius: '15px' }}
           />
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+          <span className="absolute right-3 inset-y-0 flex items-center h-full text-gray-400">
             <MdPerson size={20} />
           </span>
         </div>
       )}
       <div className="relative">
+        <label htmlFor="password" className="block mb-1 font-medium text-left">
+          Password
+        </label>
         <input
           type={showPassword ? 'text' : 'password'}
           name="password"
+          id="password"
           placeholder={mode === 'register' ? 'Enter a password' : 'enter your password'}
           value={password}
           onChange={handleChange}
@@ -182,6 +199,20 @@ const UserAuthForm = ({ mode = 'register', onSubmit, onGoogleSignIn }) => {
             ? 'Create Account'
             : 'Login'}
       </button>
+      {mode === 'login' && (
+        <div className="flex items-center mb-2">
+          <input
+            id="rememberMe"
+            type="checkbox"
+            checked={rememberMe}
+            onChange={e => setRememberMe(e.target.checked)}
+            className="mr-2"
+          />
+          <label htmlFor="rememberMe" className="text-sm font-medium select-none cursor-pointer">
+            Remember me
+          </label>
+        </div>
+      )}
       {mode === 'login' && (
         <div className="text-center mt-2">
           <span className="text-black font-medium">Forgot your password? </span>
