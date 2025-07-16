@@ -3,78 +3,83 @@ import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { MdPerson, MdEmail, MdVisibility, MdVisibilityOff } from 'react-icons/md';
 
+import { getPasswordStrength } from '../../utils/strength';
 import { isValidEmail, isStrongPassword } from '../../utils/validation';
 import { registerUserWithEmail, signInWithGooglePopup } from '../../utils/firebase';
 
 import { useAuthState, useAuthDispatch } from '../../contexts/auth/useAuth';
 import { setAuthLoading, setCurrentUser, setAuthError } from '../../contexts/auth/authActions';
+import { useFormState, useFormDispatch } from '../../contexts/form/useForm';
+import {
+  updateField,
+  setErrors,
+  clearErrors,
+  startSubmit,
+  stopSubmit,
+  resetForm,
+} from '../../contexts/form/formActions';
 
 import { EmailSignInModal } from './EmailSignInModal';
 
 const UserAuthForm = () => {
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-  });
+  const { values, errors, isSubmitting } = useFormState();
+  const formDispatch = useFormDispatch();
+  const { fullName = '', email = '', password = '' } = values;
+  const passwordStrength = getPasswordStrength(password);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showEmailModal, setShowEmailModal] = useState(false);
 
-  const { fullName, email, password } = formData;
-
   const { isAuthLoading, authError, currentUser } = useAuthState();
-  const dispatch = useAuthDispatch();
-
-  let passwordStrength = '';
-  if (password.length > 0) {
-    if (isStrongPassword(password)) {
-      passwordStrength = 'Strong';
-    } else if (password.length >= 8) {
-      passwordStrength = 'Weak';
-    } else {
-      passwordStrength = 'Too short';
-    }
-  }
+  const authDispatch = useAuthDispatch();
 
   const handleChange = e => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    formDispatch(updateField(name, value));
   };
 
   const handleRegister = async e => {
     e.preventDefault();
-    dispatch(setAuthError(null));
-    dispatch(setAuthLoading(true));
 
-    if (!isValidEmail(email) || !isStrongPassword(password)) {
-      dispatch(setAuthError('Please use a valid email and a strong password.'));
-      dispatch(setAuthLoading(false));
+    formDispatch(clearErrors());
+    formDispatch(startSubmit());
+    authDispatch(setAuthError(null));
+    authDispatch(setAuthLoading(true));
+
+    const validationErrors = {};
+    if (!isValidEmail(email)) validationErrors.email = 'Please enter a valid email';
+    if (!isStrongPassword(password)) validationErrors.password = 'Please use a stronger password';
+
+    if (Object.keys(validationErrors).length > 0) {
+      formDispatch(setErrors(validationErrors));
+      formDispatch(stopSubmit());
+      authDispatch(setAuthLoading(false));
       return;
     }
 
     try {
-      const userCred = await registerUserWithEmail(email, password, fullName);
-      dispatch(setCurrentUser(userCred.user));
-      setFormData({ fullName: '', email: '', password: '' });
+      const userCred = await registerUserWithEmail(email, password, { fullName });
+      authDispatch(setCurrentUser(userCred.user));
+      formDispatch(resetForm());
     } catch (err) {
-      dispatch(setAuthError(err.message));
+      authDispatch(setAuthError(err.message));
     } finally {
-      dispatch(setAuthLoading(false));
+      formDispatch(stopSubmit());
+      authDispatch(setAuthLoading(false));
     }
   };
 
   const handleGoogleSignIn = async () => {
-    dispatch(setAuthError(null));
-    dispatch(setAuthLoading(true));
+    authDispatch(setAuthError(null));
+    authDispatch(setAuthLoading(true));
 
     try {
       const userCred = await signInWithGooglePopup();
-      dispatch(setCurrentUser(userCred.user));
+      authDispatch(setCurrentUser(userCred.user));
     } catch (err) {
-      dispatch(setAuthError(err.message));
+      authDispatch(setAuthError(err.message));
     } finally {
-      dispatch(setAuthLoading(false));
+      authDispatch(setAuthLoading(false));
     }
   };
 
@@ -104,6 +109,7 @@ const UserAuthForm = () => {
           className="w-full p-3 pr-10 border border-gray-300"
           style={{ borderRadius: '15px' }}
         />
+        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
           <MdEmail size={20} />
         </span>
@@ -118,6 +124,7 @@ const UserAuthForm = () => {
           className="w-full p-3 pr-10 border border-gray-300"
           style={{ borderRadius: '15px' }}
         />
+        {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
@@ -138,7 +145,7 @@ const UserAuthForm = () => {
         type="submit"
         className="w-[60%] mx-auto bg-purple-700 text-white py-3 font-semibold"
         style={{ borderRadius: '15px' }}
-        disabled={isAuthLoading}
+        disabled={isAuthLoading || isSubmitting}
       >
         {isAuthLoading ? 'Registering...' : 'Create Account'}
       </button>
