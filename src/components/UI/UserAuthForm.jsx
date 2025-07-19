@@ -1,74 +1,85 @@
-import { useState, useContext } from 'react';
-import { MdPerson, MdEmail, MdVisibility, MdVisibilityOff } from 'react-icons/md';
+import { useState } from 'react';
+
 import { FcGoogle } from 'react-icons/fc';
-import AuthContext from '../../contexts/AuthContext';
+import { MdPerson, MdEmail, MdVisibility, MdVisibilityOff } from 'react-icons/md';
+
+import { getPasswordStrength } from '../../utils/strength';
 import { isValidEmail, isStrongPassword } from '../../utils/validation';
+import { registerUserWithEmail, signInWithGooglePopup } from '../../utils/firebase';
+
+import { useAuthState, useAuthDispatch } from '../../contexts/auth/useAuth';
+import { setAuthLoading, setCurrentUser, setAuthError } from '../../contexts/auth/authActions';
+import { useFormState, useFormDispatch } from '../../contexts/form/useForm';
+import {
+  updateField,
+  setErrors,
+  clearErrors,
+  startSubmit,
+  stopSubmit,
+  resetForm,
+} from '../../contexts/form/formActions';
+
 import { EmailSignInModal } from './EmailSignInModal';
 
 const UserAuthForm = () => {
-  const { register, signInWithGoogle } = useContext(AuthContext);
+  const { values, errors, isSubmitting } = useFormState();
+  const formDispatch = useFormDispatch();
+  const { fullName = '', email = '', password = '' } = values;
+  const passwordStrength = getPasswordStrength(password);
 
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-  });
-  const { fullName, email, password } = formData;
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [showEmailModal, setShowEmailModal] = useState(false);
 
-  let passwordStrength = '';
-  if (password.length > 0) {
-    if (isStrongPassword(password)) {
-      passwordStrength = 'Strong';
-    } else if (password.length >= 8) {
-      passwordStrength = 'Weak';
-    } else {
-      passwordStrength = 'Too short';
-    }
-  }
+  const { isAuthLoading, authError, currentUser } = useAuthState();
+  const authDispatch = useAuthDispatch();
 
   const handleChange = e => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    formDispatch(updateField(name, value));
   };
 
   const handleRegister = async e => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
 
-    if (!isValidEmail(email) || !isStrongPassword(password)) {
-      setError('Please use a valid email and a strong password.');
+    formDispatch(clearErrors());
+    formDispatch(startSubmit());
+    authDispatch(setAuthError(null));
+    authDispatch(setAuthLoading(true));
+
+    const validationErrors = {};
+    if (!isValidEmail(email)) validationErrors.email = 'Please enter a valid email';
+    if (!isStrongPassword(password)) validationErrors.password = 'Please use a stronger password';
+
+    if (Object.keys(validationErrors).length > 0) {
+      formDispatch(setErrors(validationErrors));
+      formDispatch(stopSubmit());
+      authDispatch(setAuthLoading(false));
       return;
     }
 
-    setLoading(true);
     try {
-      await register(email, password, fullName);
-      setSuccess('Account created successfully!');
-      setFormData({ fullName: '', email: '', password: '' });
+      const userCred = await registerUserWithEmail(email, password, { fullName });
+      authDispatch(setCurrentUser(userCred.user));
+      formDispatch(resetForm());
     } catch (err) {
-      setError(err.message);
+      authDispatch(setAuthError(err.message));
     } finally {
-      setLoading(false);
+      formDispatch(stopSubmit());
+      authDispatch(setAuthLoading(false));
     }
   };
 
   const handleGoogleSignIn = async () => {
-    setError('');
-    setSuccess('');
-    setLoading(true);
+    authDispatch(setAuthError(null));
+    authDispatch(setAuthLoading(true));
+
     try {
-      await signInWithGoogle();
-      setSuccess('Signed in with Google successfully!');
+      const userCred = await signInWithGooglePopup();
+      authDispatch(setCurrentUser(userCred.user));
     } catch (err) {
-      setError(err.message);
+      authDispatch(setAuthError(err.message));
     } finally {
-      setLoading(false);
+      authDispatch(setAuthLoading(false));
     }
   };
 
@@ -98,6 +109,7 @@ const UserAuthForm = () => {
           className="w-full p-3 pr-10 border border-gray-300"
           style={{ borderRadius: '15px' }}
         />
+        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
           <MdEmail size={20} />
         </span>
@@ -112,6 +124,7 @@ const UserAuthForm = () => {
           className="w-full p-3 pr-10 border border-gray-300"
           style={{ borderRadius: '15px' }}
         />
+        {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
@@ -132,12 +145,12 @@ const UserAuthForm = () => {
         type="submit"
         className="w-[60%] mx-auto bg-purple-700 text-white py-3 font-semibold"
         style={{ borderRadius: '15px' }}
-        disabled={loading}
+        disabled={isAuthLoading || isSubmitting}
       >
-        {loading ? 'Registering...' : 'Create Account'}
+        {isAuthLoading ? 'Registering...' : 'Create Account'}
       </button>
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-      {success && <p className="text-green-500 text-sm">{success}</p>}
+      {authError && <p className="text-red-500 text-sm">{authError}</p>}
+      {currentUser && <p className="text-green-500 text-sm">Welcome {currentUser.displayName}</p>}
       <div className="flex items-center my-4 w-[60%] mx-auto">
         <hr className="flex-grow border-t-2 border-gray-400" />
         <span className="mx-4 text-gray-700 font-bold">or</span>
@@ -153,7 +166,7 @@ const UserAuthForm = () => {
         Continue with email
       </button>
       <button
-        className="w-[60%] mx-auto py-3 rounded-md flex justify-center items-center gap-2"
+        className="w-[60%] mx-auto py-3 rounded-md flex justify-center items-center gap-2 cursor-pointer"
         type="button"
         onClick={handleGoogleSignIn}
       >
