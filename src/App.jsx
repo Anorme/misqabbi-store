@@ -8,6 +8,7 @@ import Checkout from './pages/Checkout';
 import ProductList from './pages/ProductList';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import FinishSignUp from './pages/FinishSignUp';
 
 import './App.css';
 
@@ -57,6 +58,7 @@ const App = () => {
         ></Route>
 
         <Route path="/register" element={<Register />} />
+        <Route path="/finishSignUp" element={<FinishSignUp />} />
         <Route path="/login" element={<Login />} />
       </Routes>
     </div>

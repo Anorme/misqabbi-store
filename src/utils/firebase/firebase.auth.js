@@ -10,6 +10,9 @@ import {
   onAuthStateChanged,
   signInWithPopup,
   GoogleAuthProvider,
+  sendSignInLinkToEmail,
+  isSignInWithEmailLink,
+  signInWithEmailLink,
 } from 'firebase/auth';
 import { auth } from '../../services/firebase.config';
 import { createUserDocument } from './firebase.user';
@@ -41,6 +44,59 @@ export async function registerUserWithEmail(email, password, additionalData) {
 export async function loginUserWithEmail(email, password) {
   const userCredential = await signInWithEmailAndPassword(auth, email, password);
   return userCredential.user;
+}
+
+/**
+ * Initiates email link authentication for a user.
+ *
+ * Sends a passwordless sign-in link to the specified email address using Firebase Authentication.
+ * Stores the email in localStorage to simplify sign-in on the same device.
+ * Stores email in localStorage
+ * The user will be redirected to the configured route after clicking the email link.
+ *
+ * @param {string} email - The user's email address to receive the authentication link.
+ * @returns {Promise<void>}
+ */
+export async function startSignInWithEmailLink(email) {
+  const actionCodeSettings = {
+    url: 'http://localhost:3000/finishSignUp',
+    handleCodeInApp: true,
+  };
+
+  try {
+    await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+    window.localStorage.setItem('emailForSignIn', email);
+  } catch (error) {
+    console.error('Error sending user email link for sign-in: ', error);
+  }
+}
+
+/**
+ * Completes the email link authentication flow.
+ *
+ * Verifies that the current URL contains a valid email sign-in link.
+ * Attempts to retrieve the email from localStorage, or prompts the user if unavailable.
+ * Signs in the user and returns the Firebase user object.
+ * Cleans up stored email from localStorage.
+ *
+ * @returns {Promise<User|null>} - The authenticated Firebase user object, or null on failure.
+ */
+export async function completeSignInWithEmailLink() {
+  if (isSignInWithEmailLink(auth, window.location.href)) {
+    let email = window.localStorage.getItem('emailForSignIn');
+    if (!email) {
+      email = window.prompt('Please provide your email for confirmation');
+    }
+    try {
+      const userCredential = await signInWithEmailLink(auth, email, window.location.href);
+      window.localStorage.removeItem('emailForSignIn');
+      return userCredential.user;
+    } catch (error) {
+      console.error('Error signing in user with email link: ', error);
+      return null;
+    }
+  }
+  return null;
 }
 
 /**

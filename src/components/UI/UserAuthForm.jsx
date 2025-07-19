@@ -1,8 +1,9 @@
 import { useState, useContext } from 'react';
 import { MdPerson, MdEmail, MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { FcGoogle } from 'react-icons/fc';
-import AuthContext from '../contexts/AuthContext';
-import { isValidEmail, isStrongPassword } from '../utils/validation';
+import AuthContext from '../../contexts/AuthContext';
+import { isValidEmail, isStrongPassword } from '../../utils/validation';
+import { EmailSignInModal } from './EmailSignInModal';
 
 const UserAuthForm = ({ mode = 'register', onSubmit, onGoogleSignIn }) => {
   const { register, signInWithGoogle } = useContext(AuthContext);
@@ -19,6 +20,7 @@ const UserAuthForm = ({ mode = 'register', onSubmit, onGoogleSignIn }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
 
   let passwordStrength = '';
   if (mode === 'register' && password.length > 0) {
@@ -229,8 +231,9 @@ const UserAuthForm = ({ mode = 'register', onSubmit, onGoogleSignIn }) => {
         <hr className="flex-grow border-t-2 border-gray-400" />
       </div>
       <button
-        className="w-[60%] mx-auto py-3 rounded-md mb-2 flex justify-center items-center gap-2"
+        className="w-[60%] mx-auto py-3 rounded-md mb-2 flex justify-center items-center gap-2 cursor-pointer"
         type="button"
+        onClick={() => setShowEmailModal(true)}
       >
         <MdEmail size={22} />
         Continue with email
@@ -243,6 +246,7 @@ const UserAuthForm = ({ mode = 'register', onSubmit, onGoogleSignIn }) => {
         <FcGoogle size={22} />
         Continue with Google
       </button>
+      {showEmailModal && <EmailSignInModal onClose={() => setShowEmailModal(false)} />}
     </form>
   );
 };
