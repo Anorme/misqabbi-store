@@ -7,9 +7,9 @@ Misqabbi Store is an e-commerce platform that showcases **Misqabbi**, a women-ow
 ## ⚙️ Installation
 
 1. Clone the repository:  
-   `git clone https://github.com/anorme/misaqbi-store.git`
+   `git clone https://github.com/anorme/misaqbi-frontend.git`
 2. Navigate into the project directory:  
-   `cd misqabbi-store`
+   `cd misqabbi-frontend`
 3. Install dependencies:  
    `npm install` or `yarn install`
 
